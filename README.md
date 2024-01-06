@@ -1,0 +1,2 @@
+# DiscordToken-Info
+root@spinoza:~$
