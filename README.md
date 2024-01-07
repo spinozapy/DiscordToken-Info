@@ -12,9 +12,11 @@ DiscordToken-Info is a Python-based tool that allows you to retrieve information
 2. Ensure you have Python installed.
 3. Open a terminal or command prompt in the cloned directory.
 4. Run the following command to start the tool:
+
     ```
     python main.py
     ```
+    
 5. Input the Discord token when prompted.
 6. The tool will retrieve and display information about the token's owner.
 
