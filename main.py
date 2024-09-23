@@ -21,7 +21,7 @@ def get_user_info(token):
         'Content-Type': 'application/json'
     }
 
-    res = requests.get('https://discordapp.com/api/v6/users/@me', headers=headers)
+    res = requests.get('https://discord.com/api/v10/users/@me', headers=headers)
     user_info = {}
 
     if res.status_code == 200:
@@ -29,9 +29,9 @@ def get_user_info(token):
         user_info['username'] = f'{res_json["username"]}#{res_json["discriminator"]}'
         user_info['user_id'] = res_json['id']
         user_info['avatar_id'] = res_json['avatar']
-        user_info['avatar_url'] = f'https://cdn.discordapp.com/avatars/{user_info["user_id"]}/{user_info["avatar_id"]}.gif'
-        user_info['phone_number'] = res_json['phone']
-        user_info['email'] = res_json['email']
+        user_info['avatar_url'] = f'https://cdn.discordapp.com/avatars/{user_info["user_id"]}/{user_info["avatar_id"]}.png'  # .png uzantısı
+        user_info['phone_number'] = res_json.get('phone', 'N/A')  # 'N/A' döndürüyoruz
+        user_info['email'] = res_json.get('email', 'N/A')
         user_info['creation_date'] = datetime.utcfromtimestamp(((int(user_info["user_id"]) >> 22) + 1420070400000) / 1000).strftime('%d-%m-%Y %H:%M:%S UTC')
     return user_info
 
@@ -42,17 +42,17 @@ def get_billing_info(token):
     }
 
     billing_info = []
-    billing_sources = requests.get('https://discordapp.com/api/v6/users/@me/billing/payment-sources', headers=headers).json()
+    billing_sources = requests.get('https://discord.com/api/v10/users/@me/billing/payment-sources', headers=headers).json()
     
     for x in billing_sources:
-        y = x['billing_address']
-        name = y['name']
-        address_1 = y['line_1']
-        address_2 = y['line_2']
-        city = y['city']
-        postal_code = y['postal_code']
-        state = y['state']
-        country = y['country']
+        y = x.get('billing_address', {})
+        name = y.get('name', 'N/A')
+        address_1 = y.get('line_1', 'N/A')
+        address_2 = y.get('line_2', '')
+        city = y.get('city', 'N/A')
+        postal_code = y.get('postal_code', 'N/A')
+        state = y.get('state', 'N/A')
+        country = y.get('country', 'N/A')
 
         if x['type'] == 1:
             cc_brand = x['brand']
@@ -83,7 +83,7 @@ def get_billing_info(token):
 
 def print_user_info(user_info):
     os.system(clear_command)
-    print('')
+    print(' ')
     print(f' {Fore.GREEN}Username      : {Fore.RESET}{user_info["username"]}')
     print(f' {Fore.GREEN}User ID       : {Fore.RESET}{user_info["user_id"]}')
     print(f' {Fore.GREEN}Creation Date : {Fore.RESET}{user_info["creation_date"]}')
